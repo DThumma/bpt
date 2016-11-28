@@ -548,7 +548,7 @@ node * find_leaf( node * root, int key, bool verbose ) {
 		}
 		i = 0;
 		while (i < c->num_keys) {
-			if (key < c->keys[i]) i++;      //CHANGED: from >= key to < key
+			if (key <= c->keys[i]) i++;      //CHANGED: from >= key to <= key
 			else break;
 		}
 		if (verbose)
