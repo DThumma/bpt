@@ -509,12 +509,12 @@ int find_range( node * root, int key_start, int key_end, bool verbose,
 		int returned_keys[], void * returned_pointers[]) {
 	int i, num_found;
 	num_found = 0;
-	node * n = find_leaf( root, key_end, verbose ); //CHANGED: key_start to key_end since our order has changed
+	node * n = find_leaf( root, key_start, verbose );
 	if (n == NULL) return 0;
-	for (i = 0; i < n->num_keys && n->keys[i] < key_end; i++) ;  //CHANGED: key_start to key_end since our order has changed and '>' to '<' since we want the keys inbetween
+	for (i = 0; i < n->num_keys && n->keys[i] < key_start; i++) ;
 	if (i == n->num_keys) return 0;
 	while (n != NULL) {
-		for ( ; i < n->num_keys && n->keys[i] >= key_start; i++) {  //CHANGED: key_end to key_start since our order has changed and '>=' to "<='
+		for ( ; i < n->num_keys && n->keys[i] <= key_end; i++) {
 			returned_keys[num_found] = n->keys[i];
 			returned_pointers[num_found] = n->pointers[i];
 			num_found++;
@@ -548,7 +548,7 @@ node * find_leaf( node * root, int key, bool verbose ) {
 		}
 		i = 0;
 		while (i < c->num_keys) {
-			if (key <= c->keys[i]) i++;        //CHANGED:  from >= key to <= key 
+			if (key >= c->keys[i]) i++;
 			else break;
 		}
 		if (verbose)
@@ -668,7 +668,7 @@ node * insert_into_leaf( node * leaf, int key, record * pointer ) {
 	int i, insertion_point;
 
 	insertion_point = 0;
-	while (insertion_point < leaf->num_keys && leaf->keys[insertion_point] >= key) //CHANGED: < key to >= key
+	while (insertion_point < leaf->num_keys && leaf->keys[insertion_point] < key)
 		insertion_point++;
 
 	for (i = leaf->num_keys; i > insertion_point; i--) {
@@ -709,7 +709,7 @@ node * insert_into_leaf_after_splitting(node * root, node * leaf, int key, recor
 	}
 
 	insertion_index = 0;
-	while (insertion_index < order - 1 && leaf->keys[insertion_index] >= key) //CHANGED: < key to >= key
+	while (insertion_index < order - 1 && leaf->keys[insertion_index] < key)
 		insertion_index++;
 
 	for (i = 0, j = 0; i < leaf->num_keys; i++, j++) {
