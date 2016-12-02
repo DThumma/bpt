@@ -509,12 +509,12 @@ int find_range( node * root, int key_start, int key_end, bool verbose,
 		int returned_keys[], void * returned_pointers[]) {
 	int i, num_found;
 	num_found = 0;
-	node * n = find_leaf( root, key_start, verbose );
+	node * n = find_leaf( root, key_end, verbose ); //CHANGED: key_start to key_end since our order has changed
 	if (n == NULL) return 0;
-	for (i = 0; i < n->num_keys && n->keys[i] < key_start; i++) ;
+	for (i = 0; i < n->num_keys && n->keys[i] < key_end; i++) ;  //CHANGED: key_start to key_end since our order has changed and '>' to '<' since we want the keys inbetween
 	if (i == n->num_keys) return 0;
 	while (n != NULL) {
-		for ( ; i < n->num_keys && n->keys[i] <= key_end; i++) {
+		for ( ; i < n->num_keys && n->keys[i] >= key_start; i++) { //CHANGED: key_start to key_end since our order has changed and '>=' to "<='
 			returned_keys[num_found] = n->keys[i];
 			returned_pointers[num_found] = n->pointers[i];
 			num_found++;
